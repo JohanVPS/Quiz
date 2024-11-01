@@ -15,97 +15,115 @@ class _QuizAppState extends State<QuizApp> {
     });
   }
 
+  void _voltar() {
+    if (_questionIndex > 0) {
+      setState(() {
+        _questionIndex--;
+        _totalScore -= 1; // Subtrai um ponto ao voltar para a pergunta anterior
+      });
+    }
+  }
+
+  void _reiniciarQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0; // Reinicia a pontuação
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    const int certa = 1;
+    const int errada = 0;
     final List<Map<String, Object>> perguntas = [
       {
         'texto': '1 - Qual é a verdadeira identidade do Superman?',
         'respostas': [
-          {'text': 'Bruce Wayne', 'score': 0},
-          {'text': 'Clark Kent', 'score': 1},
-          {'text': 'Hal Jordan', 'score': 0},
-          {'text': 'Oliver Queen', 'score': 0},
+          {'text': 'Bruce Wayne', 'score': errada},
+          {'text': 'Clark Kent', 'score': certa},
+          {'text': 'Hal Jordan', 'score': errada},
+          {'text': 'Oliver Queen', 'score': errada},
         ],
       },
       {
         'texto': '2 - Qual é o nome da cidade natal do Batman?',
         'respostas': [
-          {'text': 'Metropolis', 'score': 0},
-          {'text': 'Gotham City', 'score': 1},
-          {'text': 'Star City', 'score': 0},
-          {'text': 'Central City', 'score': 0},
+          {'text': 'Metropolis', 'score': errada},
+          {'text': 'Gotham City', 'score': certa},
+          {'text': 'Star City', 'score': errada},
+          {'text': 'Central City', 'score': errada},
         ],
       },
       {
         'texto': '3 - Qual cor representa a ganância entre os lanternas?',
         'respostas': [
-          {'text': 'Verde', 'score': 0},
-          {'text': 'Azul', 'score': 0},
-          {'text': 'Vermelho', 'score': 0},
-          {'text': 'Laranja', 'score': 1},
+          {'text': 'Verde', 'score': errada},
+          {'text': 'Azul', 'score': errada},
+          {'text': 'Vermelho', 'score': errada},
+          {'text': 'Laranja', 'score': certa},
         ],
       },
       {
         'texto': '4 - Qual dos seguintes personagens é um Lanterna Verde?',
         'respostas': [
-          {'text': 'Barry Allen', 'score': 0},
-          {'text': 'Arthur Curry', 'score': 0},
-          {'text': 'Billy Batson', 'score': 0},
-          {'text': 'John Stewart', 'score': 1},
+          {'text': 'Barry Allen', 'score': errada},
+          {'text': 'Arthur Curry', 'score': errada},
+          {'text': 'Billy Batson', 'score': errada},
+          {'text': 'John Stewart', 'score': certa},
         ],
       },
       {
         'texto': '5 - Qual é o nome do arqui-inimigo do Flash?',
         'respostas': [
-          {'text': 'Lex Luthor', 'score': 0},
-          {'text': 'Cheetah', 'score': 0},
-          {'text': 'Zoom', 'score': 1},
-          {'text': 'Duas-Caras', 'score': 0},
+          {'text': 'Lex Luthor', 'score': errada},
+          {'text': 'Cheetah', 'score': errada},
+          {'text': 'Zoom', 'score': certa},
+          {'text': 'Duas-Caras', 'score': errada},
         ],
       },
       {
         'texto': '6 - Qual é o nome do planeta natal de Superman?',
         'respostas': [
-          {'text': 'Júpiter', 'score': 0},
-          {'text': 'Krypton', 'score': 1},
-          {'text': 'Terra', 'score': 0},
-          {'text': 'Apokolips', 'score': 0},
+          {'text': 'Júpiter', 'score': errada},
+          {'text': 'Krypton', 'score': certa},
+          {'text': 'Terra', 'score': errada},
+          {'text': 'Apokolips', 'score': errada},
         ],
       },
       {
         'texto': '7 - Qual é a identidade secreta do Arqueiro Verde?',
         'respostas': [
-          {'text': 'Oliver Queen', 'score': 1},
-          {'text': 'Hal Jordan', 'score': 0},
-          {'text': 'Bruce Wayne', 'score': 0},
-          {'text': 'Dick Grayson', 'score': 0},
+          {'text': 'Oliver Queen', 'score': certa},
+          {'text': 'Hal Jordan', 'score': errada},
+          {'text': 'Bruce Wayne', 'score': errada},
+          {'text': 'Dick Grayson', 'score': errada},
         ],
       },
       {
         'texto': '8 - Quem é o vilão que frequentemente enfrenta a Mulher Maravilha?',
         'respostas': [
-          {'text': 'Luthor', 'score': 0},
-          {'text': 'Ares', 'score': 1},
-          {'text': 'Sinestro', 'score': 0},
-          {'text': 'Brainiac', 'score': 0},
+          {'text': 'Luthor', 'score': errada},
+          {'text': 'Ares', 'score': certa},
+          {'text': 'Sinestro', 'score': errada},
+          {'text': 'Brainiac', 'score': errada},
         ],
       },
       {
         'texto': '9 - Qual é o nome do lado obscuro da Liga da Justiça, que inclui vilões como Lex Luthor?',
         'respostas': [
-          {'text': 'Sociedade da Justiça', 'score': 0},
-          {'text': 'Injustiça', 'score': 0},
-          {'text': 'Liga da Injustiça', 'score': 0},
-          {'text': 'Sociedade Secreta dos Supervilões', 'score': 1},
+          {'text': 'Sociedade da Justiça', 'score': errada},
+          {'text': 'Injustiça', 'score': errada},
+          {'text': 'Liga da Injustiça', 'score': errada},
+          {'text': 'Sociedade Secreta dos Supervilões', 'score': certa},
         ],
       },
       {
         'texto': '10 - Qual Robin se torna conhecido como Capuz Vermelho?',
         'respostas': [
-          {'text': 'Dick Grayson', 'score': 0},
-          {'text': 'Tim Drake', 'score': 0},
-          {'text': 'Jason Todd', 'score': 1},
-          {'text': 'Damian Wayne', 'score': 0},
+          {'text': 'Dick Grayson', 'score': errada},
+          {'text': 'Tim Drake', 'score': errada},
+          {'text': 'Jason Todd', 'score': certa},
+          {'text': 'Damian Wayne', 'score': errada},
         ],
       },
     ];
@@ -114,43 +132,63 @@ class _QuizAppState extends State<QuizApp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
+          leading: _questionIndex > 0 && _questionIndex < perguntas.length
+              ? IconButton(
+                  onPressed: _voltar,
+                  icon: const Icon(Icons.arrow_back),
+                  tooltip: 'Voltar',
+                )
+              : null,
           title: const Text('Perguntas'),
+          centerTitle: true,
         ),
-        body: _questionIndex < perguntas.length ? Column(
-          children: [
-            Center(
-              child: Expanded(
-                flex: 3,
-                child: Image.network(
-                  'https://d9radp1mruvh.cloudfront.net/media/challenge_img/509655_shutterstock_1506580442_769367.jpg',
-                  fit: BoxFit.cover,
+        body: Center(
+          child: _questionIndex < perguntas.length 
+            ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Image.network(
+                    'https://d9radp1mruvh.cloudfront.net/media/challenge_img/509655_shutterstock_1506580442_769367.jpg',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
+                SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    perguntas[_questionIndex]['texto'] as String,
+                    style: const TextStyle(fontSize: 28),
+                  ),
+                ),
+                SizedBox(height: 16),
+                ...(perguntas[_questionIndex]['respostas'] as List<Map<String, Object>>).map((answer) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: ElevatedButton(
+                      onPressed: () => _responder(answer['score'] as int),
+                      child: Text(answer['text'] as String),
+                    ),
+                  );
+                }).toList(),
+              ],
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    'Pontuação Total: $_totalScore',
+                    style: const TextStyle(fontSize: 36),
+                  ),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _reiniciarQuiz,
+                  child: const Text('Reiniciar Quiz'),
+                ),
+              ],
             ),
-            SizedBox(height: 8),
-            Center(
-              child: Text(
-                perguntas[_questionIndex]['texto'] as String,
-                style: const TextStyle(fontSize: 28),
-              ),
-            ), // Diminui o espaço entre a imagem e a pergunta
-            SizedBox(height: 16), // Espaçamento entre a pergunta e os botões
-            ...(perguntas[_questionIndex]['respostas'] as List<Map<String, Object>>).map((answer) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8), // Espaçamento entre os botões
-                child: ElevatedButton(
-                  onPressed: () => _responder(answer['score'] as int),
-                  child: Text(answer['text'] as String),
-                ),
-              );
-            }).toList(),
-          ],
-        )
-        : Center(
-          child: Text(
-            'Pontuação Total: $_totalScore',
-            style: const TextStyle(fontSize: 36),
-          ),
         ),
       ),
     );
