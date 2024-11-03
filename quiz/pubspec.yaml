@@ -57,7 +57,18 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
+  assets:
+    - lib/assets/quiz_img.jpg
+    - lib/assets/superman.jpg
+    - lib/assets/batman.jpg
+    - lib/assets/lanterna.jpg
+    - lib/assets/lanterna_verde.jpeg
+    - lib/assets/flash.jpg
+    - lib/assets/krypton.jpeg
+    - lib/assets/arqueiro_verde.jpg
+    - lib/assets/mulher_maravilha.jpg
+    - lib/assets/viloes.jpg
+    - lib/assets/capuz_vermelho.jpeg
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
