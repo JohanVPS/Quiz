@@ -99,7 +99,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: size.width * 0.08,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
                 SizedBox(height: size.height * 0.01),
@@ -107,7 +107,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   'Inscreva-se para começar',
                   style: TextStyle(
                     fontSize: size.width * 0.04,
-                    color: Colors.black54,
+                    color: Colors.white,
                   ),
                 ),
               ],
@@ -218,7 +218,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Text(
                           'Cadastre-se com',
-                          style: TextStyle(color: corPreta()),
+                          style: TextStyle(
+                            color: corLetra(), 
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       Row(
@@ -230,7 +233,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 // Lógica de login com Google
                               },
                               icon: Image.asset(
-                                'lib/assets/quiz_img.jpg',
+                                'lib/assets/google_icon.png',
                                 height: 50,
                               ),
                             ),
@@ -244,7 +247,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 // Lógica de login com Apple
                               },
                               icon: Image.asset(
-                                'lib/assets/quiz_img.jpg',
+                                'lib/assets/apple_icon.png',
                                 height: 50,
                               ),
                             ),

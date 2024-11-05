@@ -73,6 +73,9 @@ flutter:
     - lib/assets/mulher_maravilha.jpg
     - lib/assets/viloes.jpg
     - lib/assets/capuz_vermelho.jpeg
+    - lib/assets/apple_icon.png
+    - lib/assets/google_icon.png
+    - lib/assets/dc_logo.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

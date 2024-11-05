@@ -102,13 +102,13 @@ class _LoginState extends State<Login> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'lib/assets/quiz_img.jpg',
+                        'lib/assets/dc_logo.png',
                         height: 125,
                       ),
                       const SizedBox(height: 20),
                       Text(
                         'É bom ver você novamente!',
-                        style: TextStyle(color: corPreta(), fontSize: 16),
+                        style: TextStyle(color: corTitulo(), fontSize: 16),
                       ),
                     ],
                   ),
@@ -252,7 +252,7 @@ class _LoginState extends State<Login> {
                           children: [
                             Text(
                               "Ou continue com",
-                              style: TextStyle(color: corPreta()),
+                              style: TextStyle(color: corLetra()),
                             ),
                           ],
                         ),
@@ -266,7 +266,7 @@ class _LoginState extends State<Login> {
                                   // Lógica de login com Google
                                 },
                                 icon: Image.asset(
-                                  'lib/assets/quiz_img.jpg',
+                                  'lib/assets/google_icon.png',
                                   height: 50,
                                 ),
                               ),
@@ -278,7 +278,7 @@ class _LoginState extends State<Login> {
                                   // Lógica de login com Apple
                                 },
                                 icon: Image.asset(
-                                  'lib/assets/quiz_img.jpg',
+                                  'lib/assets/apple_icon.png',
                                   height: 50,
                                 ),
                               ),
@@ -302,7 +302,7 @@ class _LoginState extends State<Login> {
                             child: RichText(
                               text: TextSpan(
                                 text: 'Ainda não tem uma conta? ',
-                                style: TextStyle(color: corPreta()),
+                                style: TextStyle(color: corLetra()),
                                 children: [
                                   TextSpan(
                                     text: 'Cadastre-se',

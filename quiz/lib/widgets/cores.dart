@@ -33,13 +33,17 @@ Color corCinzaClaro() {
 }
 
 Color corFundo() {
-  return const Color(0xFFFCCCCC);
+  return const Color(0xFF0071F1);
 }
 
 Color corDestaque() {
-  return const Color(0xFFE8908F);
+  return const Color(0xFF0071F1);
 }
 
 Color corLetra() {
+  return const Color(0xFF010100);
+}
+
+Color corTitulo(){
   return const Color(0xFFFFFFFF);
 }
