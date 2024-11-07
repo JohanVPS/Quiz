@@ -25,39 +25,75 @@ class MainMenuScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => QuizScreen(toggleTheme: toggleTheme)),
-                );
-              },
-              child: Text('Iniciar Quiz'),
+            Image.asset(
+              'lib/assets/dc_logo.png',
+              height: 300,
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RankingScreen(toggleTheme: toggleTheme)),
-                );
-              },
-              child: Text('Ranking'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.pushReplacement(
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.5, // Largura máxima disponível
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => Login(toggleTheme: toggleTheme)
-                    ),
+                    MaterialPageRoute(builder: (context) => QuizScreen(toggleTheme: toggleTheme)),
                   );
-                } catch (e) {
-                  print('Erro ao sair: $e');
-                }
-              },
-              child: Text('Sair'),
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min, // Para que o botão não ocupe toda a largura
+                  children: [
+                    Icon(Icons.play_arrow), // Ícone do botão
+                    SizedBox(width: 8), // Espaço entre o ícone e o texto
+                    Text('Iniciar Quiz'), // Texto do botão
+                  ],
+                ),
+              ),
+            ),
+            Padding(padding: EdgeInsets.all(5.0)),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.5, // Largura máxima disponível
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RankingScreen(toggleTheme: toggleTheme)),
+                  );
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.list), // Ícone do ranking
+                    SizedBox(width: 8),
+                    Text('Ranking'),
+                  ],
+                ),
+              )
+            ),
+            Padding(padding: EdgeInsets.all(5.0)),
+             SizedBox(
+              width: MediaQuery.of(context).size.width * 0.5, // Largura máxima disponível
+              child: ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Login(toggleTheme: toggleTheme),
+                      ),
+                    );
+                  } catch (e) {
+                    print('Erro ao sair: $e');
+                  }
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.exit_to_app), // Ícone de sair
+                    SizedBox(width: 8),
+                    Text('Sair'),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

@@ -3,8 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class QuizScreen extends StatefulWidget {
-
-  final Function toggleTheme; // Adicionando o parâmetro opcional
+  final Function toggleTheme;
 
   const QuizScreen({Key? key, required this.toggleTheme}) : super(key: key);
 
@@ -15,6 +14,7 @@ class QuizScreen extends StatefulWidget {
 class _QuizScreenState extends State<QuizScreen> {
   int _questionIndex = 0;
   int _totalScore = 0;
+  int _lastScore = 0;
 
   final List<Map<String, Object>> perguntas = [
     {
@@ -121,29 +121,60 @@ class _QuizScreenState extends State<QuizScreen> {
 
   void _responder(int score) {
     setState(() {
+      _lastScore = score;
       _totalScore += score;
       _questionIndex++;
     });
+  }
+
+  void _voltarPergunta(int score) {
+    if (_questionIndex > 0) {
+      setState(() {
+        _totalScore -= score;
+        _questionIndex--;
+      });
+    }
   }
 
   void _reiniciarQuiz() {
     setState(() {
       _questionIndex = 0;
       _totalScore = 0;
+      _lastScore = 0;
     });
   }
 
   void _salvarResultado() async {
-    // Salvar o resultado no Firestore
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await FirebaseFirestore.instance.collection('rankings').add({
-        'name': user.email,
-        'score': _totalScore,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+      // Consulta para verificar se o usuário já possui um registro no ranking
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('rankings')
+          .where('name', isEqualTo: user.email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Se o registro já existe, atualiza o documento existente
+        await FirebaseFirestore.instance
+            .collection('rankings')
+            .doc(querySnapshot.docs[0].id)
+            .update({
+          'score': _totalScore,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      } else {
+        // Caso contrário, adiciona um novo documento
+        await FirebaseFirestore.instance.collection('rankings').add({
+          'name': user.email,
+          'score': _totalScore,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+
+      Navigator.pop(context);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +183,10 @@ class _QuizScreenState extends State<QuizScreen> {
         title: const Text('Quiz', textAlign: TextAlign.center),
         actions: [
           IconButton(
-            icon: const Icon(Icons.brightness_6), // Ícone para alternar tema
-            onPressed: () {widget.toggleTheme();},
+            icon: const Icon(Icons.brightness_6),
+            onPressed: () {
+              widget.toggleTheme();
+            },
           ),
         ],
       ),
@@ -164,7 +197,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 children: [
                   Image.asset(
                     perguntas[_questionIndex]['imagem'] as String,
-                    width: MediaQuery.of(context).size.width * 0.9, 
+                    width: MediaQuery.of(context).size.width * 0.9,
                     height: MediaQuery.of(context).size.width * 0.7,
                   ),
                   SizedBox(height: 16),
@@ -175,20 +208,43 @@ class _QuizScreenState extends State<QuizScreen> {
                   ),
                   SizedBox(height: 16),
                   ...(perguntas[_questionIndex]['respostas'] as List<Map<String, Object>>).map((answer) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _responder(answer['score'] as int);
-                        },
-                        child: Text(
-                          answer['text'] as String,
-                          style: TextStyle(fontSize: 18),
-                          textAlign: TextAlign.center,
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _responder(answer['score'] as int);
+                          },
+                          child: Text(
+                            answer['text'] as String,
+                            style: TextStyle(fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
-                    );
+                    );  
                   }).toList(),
+                  SizedBox(height: 16),
+                  _questionIndex != 0 ? 
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05), // 5% da largura da tela
+                        child: ElevatedButton.icon(
+                          onPressed: () => _voltarPergunta(_lastScore),
+                          label: Text(
+                            'Back',
+                            textAlign: TextAlign.justify,
+                          ),
+                          icon: Icon(Icons.arrow_back_rounded),
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                          ),
+                        ),
+                      )
+                    ) 
+                  : Padding(padding: EdgeInsets.all(0.0)),
                 ],
               )
             : Column(
@@ -201,10 +257,16 @@ class _QuizScreenState extends State<QuizScreen> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      _salvarResultado(); // Salvar resultado ao final do quiz
                       _reiniciarQuiz();
                     },
                     child: Text('Reiniciar Quiz'),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      _salvarResultado();
+                    },
+                    child: Text('Retornar ao menu inicial'),
                   ),
                 ],
               ),

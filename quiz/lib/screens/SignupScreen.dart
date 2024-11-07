@@ -88,12 +88,17 @@ class _SignupScreenState extends State<SignupScreen> {
     return Column(
       children: [
         SizedBox(
-          height: size.height * 0.25,
+          height: size.height * 0.40,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: size.width * 0.05),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Image.asset(
+                  'lib/assets/dc_logo.png',
+                  height: 200,
+                ),
+                //SizedBox(height: size.height * 0.00001),
                 Text(
                   'Criar uma conta',
                   style: TextStyle(
@@ -228,6 +233,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Card(
+                            color: Color(0xFFFFFFFF),
                             child: IconButton(
                               onPressed: () {
                                 // Lógica de login com Google
@@ -242,6 +248,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           const SizedBox(width: 20),
                           // Ícone da Apple
                           Card(
+                            color: Color(0xFFFFFFFF),
                             child: IconButton(
                               onPressed: () {
                                 // Lógica de login com Apple
@@ -257,7 +264,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Já um Membro?'),
+                          Text('Já tem uma conta?'),
                           TextButton(
                             onPressed: () {
                               Navigator.pop(context);

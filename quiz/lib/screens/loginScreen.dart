@@ -97,15 +97,15 @@ class _LoginState extends State<Login> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
                         'lib/assets/dc_logo.png',
-                        height: 125,
+                        height: 200,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 1),
                       Text(
                         'É bom ver você novamente!',
                         style: TextStyle(color: corTitulo(), fontSize: 16),
@@ -261,6 +261,7 @@ class _LoginState extends State<Login> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Card(
+                              color: Color(0xFFFFFFFF),
                               child: IconButton(
                                 onPressed: () {
                                   // Lógica de login com Google
@@ -273,6 +274,7 @@ class _LoginState extends State<Login> {
                             ),
                             const SizedBox(width: 20),
                             Card(
+                              color: Color(0xFFFFFFFF),
                               child: IconButton(
                                 onPressed: () {
                                   // Lógica de login com Apple
