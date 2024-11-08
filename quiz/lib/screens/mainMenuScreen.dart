@@ -11,6 +11,7 @@ class MainMenuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool _isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Menu Principal', textAlign: TextAlign.center,),
@@ -26,7 +27,7 @@ class MainMenuScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'lib/assets/dc_logo.png',
+              _isDarkMode? 'lib/assets/dc_logoWhite.png' : 'lib/assets/dc_logo.png',
               height: 300,
             ),
             SizedBox(

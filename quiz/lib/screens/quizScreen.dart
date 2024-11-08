@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class QuizScreen extends StatefulWidget {
   final Function toggleTheme;
@@ -15,6 +17,9 @@ class _QuizScreenState extends State<QuizScreen> {
   int _questionIndex = 0;
   int _totalScore = 0;
   int _lastScore = 0;
+  Timer? _timer;
+  int _segundosRestantes = 10;
+  final int _tempoTotal = 10;
 
   final List<Map<String, Object>> perguntas = [
     {
@@ -88,7 +93,8 @@ class _QuizScreenState extends State<QuizScreen> {
       ],
     },
     {
-      'texto': '8 - Quem é o vilão que frequentemente enfrenta a Mulher Maravilha?',
+      'texto':
+          '8 - Quem é o vilão que frequentemente enfrenta a Mulher Maravilha?',
       'imagem': 'lib/assets/mulher_maravilha.jpg',
       'respostas': [
         {'text': 'Luthor', 'score': 0},
@@ -98,7 +104,8 @@ class _QuizScreenState extends State<QuizScreen> {
       ],
     },
     {
-      'texto': '9 - Qual é o nome do lado obscuro da Liga da Justiça, que inclui vilões como Lex Luthor?',
+      'texto':
+          '9 - Qual é o nome do lado obscuro da Liga da Justiça, que inclui vilões como Lex Luthor?',
       'imagem': 'lib/assets/viloes.jpg',
       'respostas': [
         {'text': 'Sociedade da Justiça', 'score': 0},
@@ -119,11 +126,53 @@ class _QuizScreenState extends State<QuizScreen> {
     },
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _iniciarTemporizador(); // Inicia o temporizador assim que o estado for criado
+  }
+
+  void _reiniciarTemporizador() {
+    setState(() {
+      _segundosRestantes = 10; // Reinicia o contador
+    });
+    _iniciarTemporizador();
+  }
+
+  void _pararTemporizador() {
+    _timer?.cancel();
+  }
+
+  void _iniciarTemporizador() {
+    if (_timer != null) {
+      _timer?.cancel();
+    }
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_segundosRestantes > 0) {
+          _segundosRestantes--;
+        } else {
+          _pararTemporizador(); // Para o temporizador quando chegar a zero
+          _responder(0); // Considera uma resposta errada ao acabar o tempo
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Cancela o temporizador ao sair da tela
+    super.dispose();
+  }
+
   void _responder(int score) {
     setState(() {
       _lastScore = score;
       _totalScore += score;
       _questionIndex++;
+      if (_questionIndex < perguntas.length) {
+        _reiniciarTemporizador(); // Reinicia o temporizador para a próxima pergunta
+      }
     });
   }
 
@@ -141,7 +190,9 @@ class _QuizScreenState extends State<QuizScreen> {
       _questionIndex = 0;
       _totalScore = 0;
       _lastScore = 0;
+      _segundosRestantes = 10;
     });
+    _iniciarTemporizador(); // Reinicia o temporizador ao reiniciar o quiz
   }
 
   void _salvarResultado() async {
@@ -175,7 +226,6 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -195,23 +245,42 @@ class _QuizScreenState extends State<QuizScreen> {
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: CircularPercentIndicator(
+                      percent: _segundosRestantes / _tempoTotal,
+                      radius: 60.0,
+                      lineWidth: 8.0,
+                      center: Text(
+                        "$_segundosRestantes s",
+                        style: TextStyle(
+                            fontSize: 28, fontWeight: FontWeight.bold),
+                      ),
+                      progressColor: const Color.fromARGB(255, 0, 140, 255),
+                      backgroundColor: Color(0xFFF5F5F5),
+                      circularStrokeCap: CircularStrokeCap.round,
+                    ),
+                  ),
+                  //SizedBox(height: 2), // Espaço entre o temporizador e a imagem
                   Image.asset(
                     perguntas[_questionIndex]['imagem'] as String,
                     width: MediaQuery.of(context).size.width * 0.9,
                     height: MediaQuery.of(context).size.width * 0.7,
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 1),
                   Text(
                     perguntas[_questionIndex]['texto'] as String,
-                    style: TextStyle(fontSize: 28),
+                    style: TextStyle(fontSize: 24),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 16),
-                  ...(perguntas[_questionIndex]['respostas'] as List<Map<String, Object>>).map((answer) {
+                  SizedBox(height: 12),
+                  ...(perguntas[_questionIndex]['respostas']
+                          as List<Map<String, Object>>)
+                      .map((answer) {
                     return SizedBox(
                       width: MediaQuery.of(context).size.width * 0.5,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.symmetric(vertical: 4),
                         child: ElevatedButton(
                           onPressed: () {
                             _responder(answer['score'] as int);
@@ -223,28 +292,29 @@ class _QuizScreenState extends State<QuizScreen> {
                           ),
                         ),
                       ),
-                    );  
+                    );
                   }).toList(),
-                  SizedBox(height: 16),
-                  _questionIndex != 0 ? 
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05), // 5% da largura da tela
-                        child: ElevatedButton.icon(
-                          onPressed: () => _voltarPergunta(_lastScore),
-                          label: Text(
-                            'Back',
-                            textAlign: TextAlign.justify,
+                  _questionIndex != 0
+                      ? Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                left: MediaQuery.of(context).size.width * 0.05),
+                            child: ElevatedButton.icon(
+                              onPressed: () => _voltarPergunta(_lastScore),
+                              label: Text(
+                                'Back',
+                                textAlign: TextAlign.justify,
+                              ),
+                              icon: Icon(Icons.arrow_back_rounded),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 10.0),
+                              ),
+                            ),
                           ),
-                          icon: Icon(Icons.arrow_back_rounded),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-                          ),
-                        ),
-                      )
-                    ) 
-                  : Padding(padding: EdgeInsets.all(0.0)),
+                        )
+                      : Container(),
                 ],
               )
             : Column(
