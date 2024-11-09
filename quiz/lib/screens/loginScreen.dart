@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'mainMenuScreen.dart';
 import 'SignupScreen.dart';
+import 'trocaSenhaScreen.dart';
 import 'package:quiz/classes/users.dart';
 import 'package:quiz/widgets/cores.dart';
 
@@ -214,7 +215,12 @@ class _LoginState extends State<Login> {
                           alignment: Alignment.centerLeft,
                           child: TextButton(
                             onPressed: () {
-                              // Lógica para recuperação de senha
+                              Navigator.push(
+                                context, 
+                                MaterialPageRoute(
+                                  builder: (context) => TrocaSenha(),
+                                ),
+                              );
                             },
                             child: Text(
                               'Esqueceu sua senha?',
