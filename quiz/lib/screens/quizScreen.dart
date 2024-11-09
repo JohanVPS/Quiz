@@ -224,10 +224,18 @@ class _QuizScreenState extends State<QuizScreen> {
   void _salvarResultado() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      // Obtenha o nome do usuário na coleção 'users'
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid) // Supondo que o UID do usuário é o ID do documento
+          .get();
+
+      final userName = userDoc['name'] ?? user.email; // Use o nome se disponível, caso contrário, o e-mail
+
       // Consulta para verificar se o usuário já possui um registro no ranking
       final querySnapshot = await FirebaseFirestore.instance
           .collection('rankings')
-          .where('name', isEqualTo: user.email)
+          .where('name', isEqualTo: userName)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -242,7 +250,7 @@ class _QuizScreenState extends State<QuizScreen> {
       } else {
         // Caso contrário, adiciona um novo documento
         await FirebaseFirestore.instance.collection('rankings').add({
-          'name': user.email,
+          'name': userName,
           'score': _totalScore,
           'timestamp': FieldValue.serverTimestamp(),
         });
@@ -251,6 +259,7 @@ class _QuizScreenState extends State<QuizScreen> {
       Navigator.pop(context);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
