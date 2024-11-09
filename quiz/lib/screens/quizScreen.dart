@@ -21,6 +21,8 @@ class _QuizScreenState extends State<QuizScreen> {
   int _segundosRestantes = 10;
   final int _tempoTotal = 10;
 
+  final List<bool> _perguntasRespondidas = [];
+
   final List<Map<String, Object>> perguntas = [
     {
       'texto': '1 - Qual é a verdadeira identidade do Superman?',
@@ -130,6 +132,7 @@ class _QuizScreenState extends State<QuizScreen> {
   void initState() {
     super.initState();
     _iniciarTemporizador(); // Inicia o temporizador assim que o estado for criado
+    _perguntasRespondidas.addAll(List.generate(perguntas.length, (_) => false));  
   }
 
   void _reiniciarTemporizador() {
@@ -152,11 +155,22 @@ class _QuizScreenState extends State<QuizScreen> {
         if (_segundosRestantes > 0) {
           _segundosRestantes--;
         } else {
+          _marcarPerguntaComoPulada();
           _pararTemporizador(); // Para o temporizador quando chegar a zero
-          _responder(0); // Considera uma resposta errada ao acabar o tempo
+          _responderPorTempo(0); // Considera uma resposta errada ao acabar o tempo
         }
       });
     });
+  }
+
+  void _marcarPerguntaComoPulada() {
+    // Marca a pergunta atual como pulada
+    _perguntasRespondidas[_questionIndex] = false;
+  }
+
+  void _marcarPerguntaComoRespondida() {
+    // Marca a pergunta atual como respondida
+    _perguntasRespondidas[_questionIndex] = true;
   }
 
   @override
@@ -166,6 +180,18 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   void _responder(int score) {
+    setState(() {
+      _lastScore = score;
+      _totalScore += score;
+      _marcarPerguntaComoRespondida();
+      _questionIndex++;
+      if (_questionIndex < perguntas.length) {
+        _reiniciarTemporizador(); // Reinicia o temporizador para a próxima pergunta
+      }
+    });
+  }
+
+  void _responderPorTempo(int score) {
     setState(() {
       _lastScore = score;
       _totalScore += score;
@@ -294,7 +320,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       ),
                     );
                   }).toList(),
-                  _questionIndex != 0
+                  _questionIndex != 0 && _perguntasRespondidas[_questionIndex - 1]
                       ? Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
