@@ -22,7 +22,7 @@ class _SignupScreenState extends State<SignupScreen> {
   String erro = '';
   bool _isLoading = false;
 
-  void _signup() async {
+  void _signup(BuildContext contexto) async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
@@ -30,40 +30,57 @@ class _SignupScreenState extends State<SignupScreen> {
 
       try {
         if (_password == _confirmPassword) {
-          UserCredential userCredential =
-              await _auth.createUserWithEmailAndPassword(
-            email: _email,
-            password: _password,
-          );
+          // Verifica se o nome de usuário já existe
+          final querySnapshot = await _firestore
+              .collection('users')
+              .where('name', isEqualTo: _nome)
+              .get();
 
-          String uid = userCredential.user!.uid;
+          if (querySnapshot.docs.isNotEmpty) {
+            setState(() {
+              final snackBar = SnackBar(
+                content: Text('Usuário já existe'),
+                duration: Duration(seconds: 5),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            });
 
-          await _firestore.collection('users').doc(uid).set({
-            'name': _nome,
-            'email': _email,
-          });
 
-          final snackBar = SnackBar(
-            content: Text('Cadastro concluído: ${userCredential.user!.email}'),
-            duration: Duration(seconds: 5), // Duração da SnackBar
-          );
-          Navigator.pop(context);
-          // Exibe a SnackBar
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          } else {
+            // Prossegue com o cadastro se o nome for único
+            UserCredential userCredential =
+                await _auth.createUserWithEmailAndPassword(
+              email: _email,
+              password: _password,
+            );
+
+            String uid = userCredential.user!.uid;
+
+            await _firestore.collection('users').doc(uid).set({
+              'name': _nome,
+              'email': _email,
+            });
+
+            final snackBar = SnackBar(
+              content: Text('Cadastro concluído: ${userCredential.user!.email}',),
+              duration: Duration(seconds: 5),
+            );
+            ScaffoldMessenger.of(contexto).showSnackBar(snackBar);
+            Navigator.pop(contexto);
+          }
         } else {
-          final snackBar = const SnackBar(
+          final snackBar = SnackBar(
             content: Text('As senhas não correspondem'),
-            duration: Duration(seconds: 5), // Duração da SnackBar
+            duration: Duration(seconds: 5),
           );
-          // Exibe a SnackBar
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          ScaffoldMessenger.of(contexto).showSnackBar(snackBar);
         }
       } catch (e) {
         if (e is FirebaseAuthException) {
           if (e.code == 'email-already-in-use') {
             erro = 'Email já cadastrado';
           } else if (e.code == 'weak-password') {
-            erro = 'Digite uma senha com mais de 6 digitos';
+            erro = 'Digite uma senha com mais de 6 dígitos';
           } else if (e.code == 'invalid-email') {
             erro = 'Email inválido';
           } else {
@@ -72,10 +89,9 @@ class _SignupScreenState extends State<SignupScreen> {
         }
         final snackBar = SnackBar(
           content: Text(erro),
-          duration: Duration(seconds: 5), // Duração da SnackBar
+          duration: Duration(seconds: 5),
         );
-        // Exibe a SnackBar
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        ScaffoldMessenger.of(contexto).showSnackBar(snackBar);
       } finally {
         setState(() {
           _isLoading = false;
@@ -202,7 +218,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           : Container(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: _signup,
+                                onPressed: () => _signup(context),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: corDestaque(),
                                   shape: RoundedRectangleBorder(
