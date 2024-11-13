@@ -132,7 +132,7 @@ class _QuizScreenState extends State<QuizScreen> {
   void initState() {
     super.initState();
     _iniciarTemporizador(); // Inicia o temporizador assim que o estado for criado
-    _perguntasRespondidas.addAll(List.generate(perguntas.length, (_) => false));  
+    _perguntasRespondidas.addAll(List.generate(perguntas.length, (_) => false));
   }
 
   void _reiniciarTemporizador() {
@@ -157,7 +157,8 @@ class _QuizScreenState extends State<QuizScreen> {
         } else {
           _marcarPerguntaComoPulada();
           _pararTemporizador(); // Para o temporizador quando chegar a zero
-          _responderPorTempo(0); // Considera uma resposta errada ao acabar o tempo
+          _responderPorTempo(
+              0); // Considera uma resposta errada ao acabar o tempo
         }
       });
     });
@@ -165,12 +166,16 @@ class _QuizScreenState extends State<QuizScreen> {
 
   void _marcarPerguntaComoPulada() {
     // Marca a pergunta atual como pulada
-    _perguntasRespondidas[_questionIndex] = false;
+    if (_questionIndex < perguntas.length) {
+      _perguntasRespondidas[_questionIndex] = false;
+    }
   }
 
   void _marcarPerguntaComoRespondida() {
     // Marca a pergunta atual como respondida
-    _perguntasRespondidas[_questionIndex] = true;
+    if (_questionIndex < perguntas.length) {
+      _perguntasRespondidas[_questionIndex] = true;
+    }
   }
 
   @override
@@ -181,25 +186,25 @@ class _QuizScreenState extends State<QuizScreen> {
 
   void _responder(int score) {
     setState(() {
-      _lastScore = score;
-      _totalScore += score;
-      _marcarPerguntaComoRespondida();
-      _questionIndex++;
       if (_questionIndex < perguntas.length) {
+        _lastScore = score;
+        _totalScore += score;
+        _marcarPerguntaComoRespondida();
+        _questionIndex++;
         _reiniciarTemporizador(); // Reinicia o temporizador para a próxima pergunta
       }
     });
   }
 
   void _responderPorTempo(int score) {
-    setState(() {
-      _lastScore = score;
-      _totalScore += score;
-      _questionIndex++;
-      if (_questionIndex < perguntas.length) {
+    if (_questionIndex < perguntas.length) {
+      setState(() {
+        _lastScore = score;
+        _totalScore += score;
+        _questionIndex++;
         _reiniciarTemporizador(); // Reinicia o temporizador para a próxima pergunta
-      }
-    });
+      });
+    }
   }
 
   void _voltarPergunta(int score) {
@@ -230,7 +235,8 @@ class _QuizScreenState extends State<QuizScreen> {
           .doc(user.uid) // Supondo que o UID do usuário é o ID do documento
           .get();
 
-      final userName = userDoc['name'] ?? user.email; // Use o nome se disponível, caso contrário, o e-mail
+      final userName = userDoc['name'] ??
+          user.email; // Use o nome se disponível, caso contrário, o e-mail
 
       // Consulta para verificar se o usuário já possui um registro no ranking
       final querySnapshot = await FirebaseFirestore.instance
@@ -260,122 +266,135 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Quiz', textAlign: TextAlign.center),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.brightness_6),
-            onPressed: () {
-              widget.toggleTheme();
-            },
-          ),
-        ],
-      ),
-      body: Center(
-        child: _questionIndex < perguntas.length
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: CircularPercentIndicator(
-                      percent: _segundosRestantes / _tempoTotal,
-                      radius: 60.0,
-                      lineWidth: 8.0,
-                      center: Text(
-                        "$_segundosRestantes s",
-                        style: TextStyle(
-                            fontSize: 28, fontWeight: FontWeight.bold),
-                      ),
-                      progressColor: const Color.fromARGB(255, 0, 140, 255),
-                      backgroundColor: Color(0xFFF5F5F5),
-                      circularStrokeCap: CircularStrokeCap.round,
-                    ),
-                  ),
-                  //SizedBox(height: 2), // Espaço entre o temporizador e a imagem
-                  Image.asset(
-                    perguntas[_questionIndex]['imagem'] as String,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: MediaQuery.of(context).size.width * 0.7,
-                  ),
-                  SizedBox(height: 1),
-                  Text(
-                    perguntas[_questionIndex]['texto'] as String,
-                    style: TextStyle(fontSize: 24),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 12),
-                  ...(perguntas[_questionIndex]['respostas']
-                          as List<Map<String, Object>>)
-                      .map((answer) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _responder(answer['score'] as int);
-                          },
-                          child: Text(
-                            answer['text'] as String,
-                            style: TextStyle(fontSize: 18),
-                            textAlign: TextAlign.center,
+        appBar: AppBar(
+          title: const Text('Quiz', textAlign: TextAlign.center),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.brightness_6),
+              onPressed: () {
+                widget.toggleTheme();
+              },
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Center(
+            child: _questionIndex < perguntas.length
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: CircularPercentIndicator(
+                          percent: _segundosRestantes / _tempoTotal,
+                          radius: 60.0,
+                          lineWidth: 8.0,
+                          center: Text(
+                            "$_segundosRestantes s",
+                            style: TextStyle(
+                                fontSize: 28, fontWeight: FontWeight.bold),
                           ),
+                          progressColor: const Color.fromARGB(255, 0, 140, 255),
+                          backgroundColor: Color(0xFFF5F5F5),
+                          circularStrokeCap: CircularStrokeCap.round,
                         ),
                       ),
-                    );
-                  }).toList(),
-                  _questionIndex != 0 && _perguntasRespondidas[_questionIndex - 1]
-                      ? Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            margin: EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width * 0.05),
-                            child: ElevatedButton.icon(
-                              onPressed: () => _voltarPergunta(_lastScore),
-                              label: Text(
-                                'Back',
-                                textAlign: TextAlign.justify,
-                              ),
-                              icon: Icon(Icons.arrow_back_rounded),
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 10.0),
+                      //SizedBox(height: 2), // Espaço entre o temporizador e a imagem
+                      Image.asset(
+                        perguntas[_questionIndex]['imagem'] as String,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: MediaQuery.of(context).size.width * 0.7,
+                      ),
+                      SizedBox(height: 1),
+                      Text(
+                        perguntas[_questionIndex]['texto'] as String,
+                        style: TextStyle(fontSize: 24),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 12),
+                      ...(perguntas[_questionIndex]['respostas']
+                              as List<Map<String, Object>>)
+                          .map((answer) {
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _responder(answer['score'] as int);
+                              },
+                              child: Text(
+                                answer['text'] as String,
+                                style: TextStyle(fontSize: 18),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),
-                        )
-                      : Container(),
-                ],
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Pontuação Total: $_totalScore/${perguntas.length}',
-                    style: TextStyle(fontSize: 36),
+                        );
+                      }).toList(),
+                      _questionIndex != 0 &&
+                              _perguntasRespondidas[_questionIndex - 1]
+                          ? Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                    left: MediaQuery.of(context).size.width *
+                                        0.05),
+                                child: ElevatedButton.icon(
+                                  onPressed: () => _voltarPergunta(_lastScore),
+                                  label: Text(
+                                    'Back',
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                  icon: Icon(Icons.arrow_back_rounded),
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 10.0),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Pontuação Total: $_totalScore/${perguntas.length}',
+                        style: TextStyle(fontSize: size.width * 0.07),
+                      ),
+                      SizedBox(height: size.width * 0.07),
+                      ElevatedButton(
+                        onPressed: () {
+                          _reiniciarQuiz();
+                        },
+                        child: Text('Reiniciar Quiz'),
+                      ),
+                      SizedBox(height: size.width * 0.05),
+                      ElevatedButton(
+                        onPressed: () {
+                          _salvarResultado();
+                        },
+                        child: Text('Retornar ao menu inicial'),
+                      ),
+                      SizedBox(
+                        height: size.width * 0.07,
+                      ),
+                      Image.asset(
+                        _totalScore > 7
+                            ? 'lib/assets/flash_dance.gif'
+                            : 'lib/assets/flash_cry.gif',
+                        height: size.width * 0.5,
+                      )
+                    ],
                   ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      _reiniciarQuiz();
-                    },
-                    child: Text('Reiniciar Quiz'),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      _salvarResultado();
-                    },
-                    child: Text('Retornar ao menu inicial'),
-                  ),
-                ],
-              ),
-      ),
-    );
+          ),
+        ));
   }
 }

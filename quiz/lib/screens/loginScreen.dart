@@ -62,7 +62,9 @@ class _LoginState extends State<Login> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => MainMenuScreen(toggleTheme: widget.toggleTheme), // Passando toggleTheme se não for nulo
+            builder: (context) => MainMenuScreen(
+                toggleTheme:
+                    widget.toggleTheme), // Passando toggleTheme se não for nulo
           ),
         );
       } on FirebaseAuthException catch (e) {
@@ -87,6 +89,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: corFundo(),
       body: Center(
@@ -97,6 +101,7 @@ class _LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(height: size.width * 0.03),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Column(
@@ -104,9 +109,9 @@ class _LoginState extends State<Login> {
                     children: [
                       Image.asset(
                         'lib/assets/dc_logo.png',
-                        height: 200,
+                        height: size.width * 0.40,
                       ),
-                      const SizedBox(height: 1),
+                      SizedBox(height: size.width * 0.05),
                       Text(
                         'É bom ver você novamente!',
                         style: TextStyle(color: corTitulo(), fontSize: 16),
@@ -114,7 +119,6 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
 
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -216,7 +220,7 @@ class _LoginState extends State<Login> {
                           child: TextButton(
                             onPressed: () {
                               Navigator.push(
-                                context, 
+                                context,
                                 MaterialPageRoute(
                                   builder: (context) => TrocaSenha(),
                                 ),

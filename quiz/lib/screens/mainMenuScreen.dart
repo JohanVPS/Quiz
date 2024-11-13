@@ -12,6 +12,7 @@ class MainMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool _isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Menu Principal', textAlign: TextAlign.center,),
@@ -28,8 +29,9 @@ class MainMenuScreen extends StatelessWidget {
           children: [
             Image.asset(
               _isDarkMode? 'lib/assets/dc_logoWhite.png' : 'lib/assets/dc_logo.png',
-              height: 300,
+              height: size.width * 0.38,
             ),
+            SizedBox(height: size.height * 0.05),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.5, // Largura máxima disponível
               child: ElevatedButton(

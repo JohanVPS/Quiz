@@ -77,6 +77,8 @@ flutter:
     - lib/assets/google_icon.png
     - lib/assets/dc_logo.png
     - lib/assets/dc_logoWhite.png
+    - lib/assets/flash_cry.gif
+    - lib/assets/flash_dance.gif
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
