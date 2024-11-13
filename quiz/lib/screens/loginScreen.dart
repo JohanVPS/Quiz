@@ -20,6 +20,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = false;
 
   Future<String> fetchUid(String email) async {
     var cliente = await FirebaseFirestore.instance
@@ -191,6 +192,7 @@ class _LoginState extends State<Login> {
                         ),
                         const SizedBox(height: 8),
                         TextFormField(
+                          obscureText: !_isPasswordVisible,
                           controller: _passwordController,
                           style: TextStyle(color: corPreta()),
                           cursorColor: corPreta(),
@@ -207,8 +209,18 @@ class _LoginState extends State<Login> {
                               vertical: 16,
                               horizontal: 12,
                             ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                // Exibe o ícone baseado no estado da senha
+                                _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible; // Alterna o estado
+                                });
+                              },
+                            ),
                           ),
-                          obscureText: true,
                           validator: (value) {
                             if (value?.isEmpty ?? true) {
                               return 'Por favor, insira uma senha';

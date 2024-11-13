@@ -282,7 +282,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Já tem uma conta?'),
+                      Text('Já tem uma conta?',
+                      style: TextStyle(color: corCinzaClaro()),),
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
