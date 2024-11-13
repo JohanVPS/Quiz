@@ -162,7 +162,7 @@ class _LoginState extends State<Login> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: corPreta()),
+                              borderSide: BorderSide(color: corDestaque()),
                             ),
                             contentPadding: const EdgeInsets.symmetric(
                               vertical: 16,
@@ -203,7 +203,7 @@ class _LoginState extends State<Login> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Colors.black),
+                              borderSide: BorderSide(color: corDestaque()),
                             ),
                             contentPadding: const EdgeInsets.symmetric(
                               vertical: 16,

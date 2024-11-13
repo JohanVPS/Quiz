@@ -22,6 +22,21 @@ class _SignupScreenState extends State<SignupScreen> {
   String erro = '';
   bool _isLoading = false;
 
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
+    });
+  }
+
+  void _toggleConfirmPasswordVisibility() {
+    setState(() {
+      _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+    });
+  }
+
   void _signup(BuildContext contexto) async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -135,6 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
           Container(
+            height: size.height * 0.6,
             decoration: BoxDecoration(
               color: corBranca(),
               borderRadius: BorderRadius.circular(20),
@@ -188,8 +204,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   TextFormField(
                     style: TextStyle(color: corPreta()),
                     cursorColor: corPreta(),
-                    decoration: inputDec('Senha', Icons.lock),
-                    obscureText: true,
+                    decoration: inputDec(
+                      'Senha', 
+                      Icons.lock, 
+                      isPassword: true, 
+                      isPasswordVisible: _isPasswordVisible, 
+                      toggleVisibility: _togglePasswordVisibility,
+                    ),
+                    obscureText: !_isPasswordVisible,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor, insira uma senha';
@@ -204,8 +226,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   TextFormField(
                     style: TextStyle(color: corPreta()),
                     cursorColor: corPreta(),
-                    decoration: inputDec('Confirme sua senha', Icons.lock),
-                    obscureText: true,
+                    decoration: inputDec(
+                      'Confirme sua senha', 
+                      Icons.lock,
+                      isPassword: true,
+                      isPasswordVisible: _isConfirmPasswordVisible,
+                      toggleVisibility: _toggleConfirmPasswordVisibility,
+                    ),
+                    obscureText: !_isConfirmPasswordVisible,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor, insira uma senha';
