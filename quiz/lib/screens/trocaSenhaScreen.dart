@@ -85,6 +85,8 @@ void _sendPasswordResetEmail(String email) async {
             Form(
               key: _formKey,
               child: TextFormField(
+                style: TextStyle(color: corPreta()),
+                cursorColor: corPreta(),
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'E-mail',

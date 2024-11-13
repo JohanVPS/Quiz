@@ -154,6 +154,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   SizedBox(height: size.height * 0.02),
                   TextFormField(
+                    style: TextStyle(color: corPreta()),
+                    cursorColor: corPreta(),
                     decoration: inputDec('Nome', Icons.person),
                     keyboardType: TextInputType.name,
                     validator: (value) {
@@ -168,6 +170,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   SizedBox(height: size.height * 0.02),
                   TextFormField(
+                    style: TextStyle(color: corPreta()),
+                    cursorColor: corPreta(),
                     decoration: inputDec('Email', Icons.email),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
@@ -182,6 +186,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   SizedBox(height: size.height * 0.02),
                   TextFormField(
+                    style: TextStyle(color: corPreta()),
+                    cursorColor: corPreta(),
                     decoration: inputDec('Senha', Icons.lock),
                     obscureText: true,
                     validator: (value) {
@@ -196,6 +202,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   SizedBox(height: size.height * 0.02),
                   TextFormField(
+                    style: TextStyle(color: corPreta()),
+                    cursorColor: corPreta(),
                     decoration: inputDec('Confirme sua senha', Icons.lock),
                     obscureText: true,
                     validator: (value) {

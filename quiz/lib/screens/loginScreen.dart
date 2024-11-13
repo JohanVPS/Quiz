@@ -152,6 +152,8 @@ class _LoginState extends State<Login> {
                         const SizedBox(height: 8),
                         TextFormField(
                           controller: _emailController,
+                          style: TextStyle(color: corPreta()),
+                          cursorColor: corPreta(),
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -190,6 +192,8 @@ class _LoginState extends State<Login> {
                         const SizedBox(height: 8),
                         TextFormField(
                           controller: _passwordController,
+                          style: TextStyle(color: corPreta()),
+                          cursorColor: corPreta(),
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
