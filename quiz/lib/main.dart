@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:quiz/firebase_options.dart';
-import 'screens/loginScreen.dart';
+import 'package:quiz/screens/verificaLoginScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +30,7 @@ class _QuizAppState extends State<QuizApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _isDarkTheme ? ThemeData.dark() : ThemeData.light(),
-      home: Login(toggleTheme: _toggleTheme),
+      home: Verificaloginscreen(toggleTheme: _toggleTheme),
     );
   }
 }
