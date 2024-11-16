@@ -19,7 +19,7 @@ class _QuizScreenState extends State<QuizScreen> {
   int _lastScore = 0;
   Timer? _timer;
   int _segundosRestantes = 10;
-  final int _tempoTotal = 10;
+  int _tempoTotal = 10;
 
   final List<bool> _perguntasRespondidas = [];
 

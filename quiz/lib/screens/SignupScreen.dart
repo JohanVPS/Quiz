@@ -115,7 +115,7 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  Widget _mobile(size) {
+  Widget _buildForm(size) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -353,7 +353,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   offset: Offset(0, 0) // posição x,y
                   )
             ]),
-        child: _mobile(size),
+        child: _buildForm(size),
       ),
     ));
   }

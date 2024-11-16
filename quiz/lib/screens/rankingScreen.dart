@@ -9,19 +9,22 @@ class RankingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool _isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Ranking',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
+            color: _isDarkMode ? corBranca() : corPreta(),
           ),
           textAlign: TextAlign.center,
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.brightness_6),
+            color: _isDarkMode ? corBranca() : corPreta(),
             onPressed: () {
               toggleTheme();
             },
@@ -70,13 +73,14 @@ class RankingScreen extends StatelessWidget {
                 elevation: 3,
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: corDestaque().withOpacity(0.7),
+                    backgroundColor: _isDarkMode ? Color(0xFF1D1B20) : Color(0xFFF7F2FA),
                     child: Text(
-                      '${index + 1}',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      '${index + 1}    |',
+                      style: TextStyle(
+                        color: _isDarkMode ? corBranca() : corPreta(),
                         fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   title: Text(
