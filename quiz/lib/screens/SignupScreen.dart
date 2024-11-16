@@ -246,7 +246,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   SizedBox(height: size.height * 0.02),
                   _isLoading
-                      ? Center(child: CircularProgressIndicator())
+                      ? Center(child: CircularProgressIndicator(color: corDestaque(),))
                       : Container(
                           width: double.infinity,
                           child: ElevatedButton(

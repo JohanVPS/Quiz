@@ -21,6 +21,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
   Future<String> fetchUid(String email) async {
     var cliente = await FirebaseFirestore.instance
@@ -52,6 +53,9 @@ class _LoginState extends State<Login> {
 
   void verifyLogin() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: _emailController.text, password: _passwordController.text);
@@ -84,6 +88,10 @@ class _LoginState extends State<Login> {
                     ),
                   ],
                 ));
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }
@@ -252,7 +260,8 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         const SizedBox(height: 20),
-
+                         _isLoading
+                          ? Center(child: CircularProgressIndicator(color: corDestaque(),)) :
                         // Botão de Login
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(

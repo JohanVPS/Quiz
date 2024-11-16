@@ -373,6 +373,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       ElevatedButton(
                         onPressed: () {
                           _reiniciarQuiz();
+                          _salvarResultado();
                         },
                         child: Text('Reiniciar Quiz'),
                       ),
